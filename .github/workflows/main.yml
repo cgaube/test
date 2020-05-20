@@ -1,0 +1,32 @@
+name: Main Workflow
+
+on:
+  pull_request:
+    branches:
+      - master
+
+jobs:
+  feature-tests:
+    name: Feature Tests
+    runs-on: ubuntu-latest
+    steps:
+      - name: Setup PHP, with composer and extensions
+        uses: shivammathur/setup-php@v1
+        with:
+          php-version: 7.3
+          extensions: mbstring, dom, fileinfo, mysql
+          coverage: xdebug
+
+      - name: Checkout files
+        uses: actions/checkout@v2
+
+      - name: Install Dependencies
+        run: composer install -q --no-ansi --no-interaction --no-suggest --no-progress --prefer-dist
+
+      - name: actions/setup-node
+        uses: actions/setup-node@v1.4.1
+        with:
+          node-version: "13.9.0"
+
+      - run: yarn install
+

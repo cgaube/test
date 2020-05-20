@@ -1,0 +1,30 @@
+{
+    "name": "cgaube/test",
+    "description": "Test mono repo and github actions",
+    "license": "proprietary",
+    "require": {
+        "php": "^7.3"
+    },
+    "require-dev": {
+        "symplify/monorepo-builder": "^7.0"
+    },
+    "autoload": {
+        "classmap": [
+            "packages/packageA/src/",
+            "packages/packageB/src/"
+        ],
+        "psr-4": {
+            "TestA\\": "packages/packageA/src/",
+            "TestB\\": "packages/packageB/src/"
+        }
+    },
+    "replace": {
+        "cgaube/test-packageA": "self.version",
+        "cgaube/test-packageB": "self.version"
+    },
+    "config": {
+        "sort-packages": true
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true
+}
