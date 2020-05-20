@@ -34,5 +34,6 @@ jobs:
 
       - name: Split changelog in packages?
         run: echo "Commit changelog"
+
       - name: Create next tag + git release
         run: echo "Depending on the commit history create new patch / minor or major "
