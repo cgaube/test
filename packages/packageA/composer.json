@@ -3,7 +3,7 @@
     "description": "test Package A",
     "license": "proprietary",
     "require": {
-        "cgaube/test-package-a": "^1.1"
+        "cgaube/test-package-a": "^1.0.3"
     },
     "autoload": {
         "psr-4": {
