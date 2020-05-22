@@ -1,3 +1,15 @@
+services:
+  TestMonorepo\:
+    resource: './src'
+  Symplify\MonorepoBuilder\Release\ReleaseWorkerProvider:
+    arguments:
+      $releaseWorkers:
+        - '@Symplify\MonorepoBuilder\Release\ReleaseWorker\SetCurrentMutualDependenciesReleaseWorker'
+        - '@TestMonorepo\Monorepo\ReleaseWorker\TagVersionReleaseWorker'
+        - '@Symplify\MonorepoBuilder\Release\ReleaseWorker\PushTagReleaseWorker'
+        - '@Symplify\MonorepoBuilder\Release\ReleaseWorker\SetNextMutualDependenciesReleaseWorker'
+        - '@Symplify\MonorepoBuilder\Release\ReleaseWorker\UpdateBranchAliasReleaseWorker'
+        - '@TestMonorepo\Monorepo\ReleaseWorker\PushNextDevReleaseWorker'
 parameters:
   # for "split" command
   directories_to_repositories:

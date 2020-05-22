@@ -10,10 +10,12 @@
     },
     "autoload": {
         "classmap": [
+            "src/",
             "packages/packageA/src/",
             "packages/packageB/src/"
         ],
         "psr-4": {
+            "TestMonoRepo\\": "src/",
             "TestA\\": "packages/packageA/src/",
             "TestB\\": "packages/packageB/src/"
         }
