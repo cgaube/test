@@ -1,6 +1,6 @@
 parameters:
   # for "split" command
   directories_to_repositories:
-    packages/packageA: 'file:///home/developer/git/packageA.git'
-    packages/packageB: 'file:///home/developer/git/packageB.git'
+    packages/packageA: 'git@github.com:cgaube/test-package-a.git'
+    packages/packageB: 'git@github.com:cgaube/test-package-b.git'
 
