@@ -1,13 +1,13 @@
 {
-  "name": "cgaube/test-packageA",
-  "description": "test Package A",
-  "license": "proprietary",
-  "autoload": {
-    "psr-4": {
-      "TestA\\": "src/"
-    },
-    "classmap": [
-      "src/"
-    ]
-  }
+    "name": "cgaube/test-packageA",
+    "description": "test Package A",
+    "license": "proprietary",
+    "autoload": {
+        "psr-4": {
+            "TestA\\": "src/"
+        },
+        "classmap": [
+            "src/"
+        ]
+    }
 }
