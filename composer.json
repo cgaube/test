@@ -10,14 +10,14 @@
     },
     "autoload": {
         "classmap": [
-            "src/",
             "packages/packageA/src/",
-            "packages/packageB/src/"
+            "packages/packageB/src/",
+            "src/"
         ],
         "psr-4": {
-            "TestMonoRepo\\": "src/",
             "TestA\\": "packages/packageA/src/",
-            "TestB\\": "packages/packageB/src/"
+            "TestB\\": "packages/packageB/src/",
+            "TestMonoRepo\\": "src/"
         }
     },
     "replace": {
