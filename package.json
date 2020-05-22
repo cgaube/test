@@ -14,7 +14,7 @@
   },
   "scripts": {
     "commit": "cross-env CZ_ISSUES=\"$(git rev-parse --abbrev-ref HEAD)\" git-cz",
-    "changelog": "standard-changelog"
+    "changelog": "lerna-changelog"
   },
   "config": {
     "commitizen": {
