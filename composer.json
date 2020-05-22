@@ -19,8 +19,8 @@
         }
     },
     "replace": {
-        "cgaube/test-packageA": "self.version",
-        "cgaube/test-packageB": "self.version"
+        "cgaube/test-package-a": "self.version",
+        "cgaube/test-package-b": "self.version"
     },
     "config": {
         "sort-packages": true

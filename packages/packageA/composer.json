@@ -1,7 +1,10 @@
 {
-    "name": "cgaube/test-packageA",
+    "name": "cgaube/test-package-a",
     "description": "test Package A",
     "license": "proprietary",
+    "require": {
+        "cgaube/test-package-a": "dev-master"
+    },
     "autoload": {
         "psr-4": {
             "TestA\\": "src/"

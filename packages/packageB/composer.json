@@ -1,5 +1,5 @@
 {
-    "name": "cgaube/test-packageB",
+    "name": "cgaube/test-package-b",
     "description": "test Package B",
     "license": "proprietary",
     "autoload": {
