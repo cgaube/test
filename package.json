@@ -8,13 +8,17 @@
     "@commitlint/cli": "^8.3.5",
     "@commitlint/config-conventional": "^8.3.4",
     "commitizen": "^4.1.2",
+    "conventional-recommended-bump": "^6.0.9",
     "cross-env": "^7.0.2",
     "husky": "^4.2.5",
-    "lerna-changelog": "^1.0.1"
+    "standard-changelog": "^2.0.24"
   },
   "scripts": {
     "commit": "cross-env CZ_ISSUES=\"$(git rev-parse --abbrev-ref HEAD)\" git-cz",
-    "changelog": "lerna-changelog"
+    "bump": "conventional-recommended-bump -p angular",
+    "test-release": "vendor/bin/monorepo-builder release $(yarn -s bump) --dry-run",
+    "test-changelog": "vendor/bin/monorepo-builder release $(yarn -s bump) --dry-run --stage=changelog",
+    "changelog": "standard-changelog --commit-path=packages/packageA"
   },
   "config": {
     "commitizen": {

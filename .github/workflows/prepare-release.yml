@@ -1,0 +1,47 @@
+name: Prepare release Workflow.
+
+on:
+  create:
+    branches:
+      - 'release/**'
+
+jobs:
+  release-job:
+    name: Release Job
+    runs-on: ubuntu-latest
+    steps:
+      - name: Test
+        run: echo ${{ github.ref }}
+
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Setup PHP, with composer and extensions
+        uses: shivammathur/setup-php@v1
+        with:
+          php-version: 7.3
+          extensions: mbstring, dom, fileinfo, mysql
+
+      - name: actions/setup-node
+        uses: actions/setup-node@v1.4.1
+        with:
+          node-version: "13.9.0"
+
+      - run: yarn install
+
+      - name: Php Monorepo release command to update the dependencies -
+        run: echo "Edit changelog"
+
+      - name: Create Pull Request
+        uses: peter-evans/create-pull-request@v2
+        with:
+          branch: ${{ github.ref }}
+          token: ${{ secrets.GITHUB_TOKEN }}
+          title: Pull request for automated release.
+          labels: automated pr
+          body: Test release
+
+      - name: Check outputs
+        run: |
+          echo "Pull Request Number - ${{ env.PULL_REQUEST_NUMBER }}"
+          echo "Pull Request Number - ${{ steps.cpr.outputs.pull-request-number }}"

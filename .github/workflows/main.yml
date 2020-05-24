@@ -6,8 +6,19 @@ on:
       - master
 
 jobs:
-  feature-tests:
-    name: Feature Tests
+  lint:
+    name: Linting
+    runs-on: ubuntu-latest
+    env:
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+      - uses: wagoid/commitlint-github-action@v1
+
+  build_and_test:
+    name: Build and Test
     runs-on: ubuntu-latest
     steps:
       - name: Setup PHP, with composer and extensions
@@ -29,4 +40,3 @@ jobs:
           node-version: "13.9.0"
 
       - run: yarn install
-
