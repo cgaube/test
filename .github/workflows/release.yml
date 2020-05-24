@@ -1,39 +1,18 @@
-name: Release Workflow.
+name: Prepare release Workflow.
 
 on:
-  push:
+  pull_request:
+    types: [closed]
     branches:
-      - 'releases/**'
+      - 'release/**'
+
 jobs:
   release-job:
     name: Release Job
+    if: startsWith(github.head_ref, 'release/') && github.event.pull_request.merged === true
     runs-on: ubuntu-latest
     steps:
-      - name: Setup PHP, with composer and extensions
-        uses: shivammathur/setup-php@v1
-        with:
-          php-version: 7.3
-          extensions: mbstring, dom, fileinfo, mysql, redis, memcached
-          coverage: xdebug
-
-      - name: Checkout files
-        uses: actions/checkout@v2
-
-      - name: actions/setup-node
-        uses: actions/setup-node@v1.4.1
-        with:
-          node-version: "13.9.0"
-
-      - run: yarn install
-
-      - name: Update changelog
-        run: echo "update changelog"
-
-      - name: Commit changelog
-        run: echo "Commit changelog"
-
-      - name: Split changelog in packages?
-        run: echo "Commit changelog"
-
-      - name: Create next tag + git release
-        run: echo "Depending on the commit history create new patch / minor or major "
+      - name: Test
+        run: echo ${{ toJSON(github) }}}
+      - name: Test
+        run: echo ${{ toJSON(github.event.pull_request) }}}

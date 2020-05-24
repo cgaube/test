@@ -18,7 +18,7 @@ final class TagVersionReleaseWorker implements ReleaseWorkerInterface
 
     private $commitMessage;
 
-    public function __construct(ProcessRunner $processRunner, string $prepareReleaseCommitMessage = 'chore: prepare release')
+    public function __construct(ProcessRunner $processRunner, string $prepareReleaseCommitMessage = 'chore: prepare release %s')
     {
         $this->processRunner = $processRunner;
         $this->commitMessage = $prepareReleaseCommitMessage;
@@ -31,8 +31,9 @@ final class TagVersionReleaseWorker implements ReleaseWorkerInterface
 
     public function work(Version $version): void
     {
+        $commitMessage = $this->getCommitMessage($version);
         try {
-            $this->processRunner->run('git add . && git commit -m "'.$this->commitMessage.'" && git push origin master');
+            $this->processRunner->run('git add . && git commit -m "'.$commitMessage.'" && git push origin HEAD');
         } catch (Throwable $throwable) {
             // nothing to commit
         }
@@ -42,6 +43,12 @@ final class TagVersionReleaseWorker implements ReleaseWorkerInterface
 
     public function getDescription(Version $version): string
     {
-        return sprintf('Add local tag "%s" ['.$this->commitMessage.']', $version->getVersionString());
+        $commitMessage = $this->getCommitMessage($version);
+        return sprintf('Commit release changes and add local tag "%s". Commit message: ['.$commitMessage.']', $version->getVersionString());
+    }
+
+    protected function getCommitMessage(Version $version): string
+    {
+        return sprintf($this->commitMessage, $version->getVersionString());
     }
 }

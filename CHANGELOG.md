@@ -1,18 +1,13 @@
-# Changelog
+# [](https://github.com/cgaube/test/compare/v1.0.4...v) (2020-05-24)
 
-All notable changes to this project will be documented in this file.
 
-The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
-and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
+### Features
 
-## v1.0.1 - 2020-05-22
+* **packagea:** add new feature to package a ([45e5295](https://github.com/cgaube/test/commit/45e5295f115cd912b68902d3d1292878256f8b5e))
 
-### Added
 
-Another test.
 
-## v1.0.0 - 2020-05-22
+# [](https://github.com/cgaube/test/compare/v1.0.4...v) (2020-05-24)
 
-### Added
 
-Testing monorepo release function
+
