@@ -6,13 +6,38 @@ on:
       - 'release/**'
 
 jobs:
-  release-job:
-    name: Release Job
+  output:
+    runs-on: ubuntu-16.04
+    steps:
+      - name: Dump GitHub context
+        env:
+          GITHUB_CONTEXT: ${{ toJson(github) }}
+        run: echo "$GITHUB_CONTEXT"
+      - name: Dump job context
+        env:
+          JOB_CONTEXT: ${{ toJson(job) }}
+        run: echo "$JOB_CONTEXT"
+      - name: Dump steps context
+        env:
+          STEPS_CONTEXT: ${{ toJson(steps) }}
+        run: echo "$STEPS_CONTEXT"
+      - name: Dump runner context
+        env:
+          RUNNER_CONTEXT: ${{ toJson(runner) }}
+        run: echo "$RUNNER_CONTEXT"
+      - name: Dump strategy context
+        env:
+          STRATEGY_CONTEXT: ${{ toJson(strategy) }}
+        run: echo "$STRATEGY_CONTEXT"
+      - name: Dump matrix context
+        env:
+          MATRIX_CONTEXT: ${{ toJson(matrix) }}
+        run: echo "$MATRIX_CONTEXT"
+
+  prepare-release:
+    name: Prepare Release
     runs-on: ubuntu-latest
     steps:
-      - name: Test
-        run: echo ${{ github.ref }}
-
       - name: Checkout
         uses: actions/checkout@v2
 
@@ -30,18 +55,19 @@ jobs:
       - run: yarn install
 
       - name: Php Monorepo release command to update the dependencies -
-        run: echo "Edit changelog"
-
-      - name: Create Pull Request
-        uses: peter-evans/create-pull-request@v2
-        with:
-          branch: ${{ github.ref }}
-          token: ${{ secrets.GITHUB_TOKEN }}
-          title: Pull request for automated release.
-          labels: automated pr
-          body: Test release
-
-      - name: Check outputs
         run: |
-          echo "Pull Request Number - ${{ env.PULL_REQUEST_NUMBER }}"
-          echo "Pull Request Number - ${{ steps.cpr.outputs.pull-request-number }}"
+          echo "Test release" >> CHANGELOG.MD
+
+      - name: Commit changes
+        uses: stefanzweifel/git-auto-commit-action@v4
+        with:
+          commit_message: 'chore: preparing release'
+          commit_options: '--no-verify'
+
+      - name: Create pull request for the release
+        uses: repo-sync/pull-request@v2
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          pr_title: Automated PR for release process.
+          pr_draft: true
+          pr_label: auto-pr
