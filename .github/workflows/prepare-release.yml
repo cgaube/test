@@ -52,7 +52,7 @@ jobs:
         with:
           node-version: "13.9.0"
 
-      - run: yarn install
+      - run: yarn install --frozen-lockfile
 
       - name: Php Monorepo release command to update the dependencies -
         run: |
