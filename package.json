@@ -15,10 +15,7 @@
   },
   "scripts": {
     "commit": "cross-env CZ_ISSUES=\"$(git rev-parse --abbrev-ref HEAD)\" git-cz",
-    "bump": "conventional-recommended-bump -p angular",
-    "test-release": "vendor/bin/monorepo-builder release $(yarn -s bump) --dry-run",
-    "test-changelog": "vendor/bin/monorepo-builder release $(yarn -s bump) --dry-run --stage=changelog",
-    "changelog": "standard-changelog --commit-path=packages/packageA"
+    "bump": "conventional-recommended-bump -p angular"
   },
   "config": {
     "commitizen": {
