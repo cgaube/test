@@ -1,9 +1,10 @@
-name: Prepare release Workflow.
+name: Release new version
 
 on:
-  create:
+  pull_request:
+    types: [closed]
     branches:
-      - 'release/**'
+      - master
 
 jobs:
   output:
@@ -34,14 +35,13 @@ jobs:
           MATRIX_CONTEXT: ${{ toJson(matrix) }}
         run: echo "$MATRIX_CONTEXT"
 
-  prepare-release:
-    name: Prepare Release
+  release-job:
+    name: Release Job - To do check that the PR is from same repo!
+    if: startsWith(github.head_ref, 'release/') && github.event.pull_request.merged === true
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v2
-        with:
-          fetch-depth: 0
 
       - name: actions/setup-node
         uses: actions/setup-node@v1.4.1
@@ -51,7 +51,7 @@ jobs:
       - run: yarn install --frozen-lockfile
 
       - name: Set next version
-        run: echo "::set-env name=release_version::$(yarn -s bump)"
+        run: echo "::set-env name=version::$(yarn -s bump)"
 
       - name: Setup PHP, with composer and extensions
         uses: shivammathur/setup-php@v1
@@ -62,19 +62,13 @@ jobs:
       - name: Install Dependencies
         run: composer install -q --no-ansi --no-interaction --no-suggest --no-progress --prefer-dist
 
-      - name: Update Changelog.
-        run: vendor/bin/monorepo-builder release ${{ env.release_version }} --stage=changelog
+      - name: Show version
+        run: echo ${{ version }}
 
-      - name: Commit changes
-        uses: stefanzweifel/git-auto-commit-action@v4
-        with:
-          commit_message: 'chore(all): preparing release'
-          commit_options: '--no-verify'
+      #- name: Monorepo release
+      #  run: vendor/bin/monorepo-builder release $(yarn -s bump) --dry-run
 
-      - name: Create pull request for the release
-        uses: repo-sync/pull-request@v2
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          pr_title: Automated PR for release process - ${{ env.release_version }}.
-          pr_draft: false
-          pr_label: auto-pr
+      #- name: Monorepo split
+      #  run: vendor/bin/monorepo-builder split
+
+

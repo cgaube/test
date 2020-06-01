@@ -21,16 +21,27 @@ jobs:
   build_and_test:
     name: Build and Test
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        php: [7.3]
     steps:
       - name: Setup PHP, with composer and extensions
         uses: shivammathur/setup-php@v1
         with:
-          php-version: 7.3
+          php-version: ${{ matrix.php }}
           extensions: mbstring, dom, fileinfo, mysql
           coverage: xdebug
 
       - name: Checkout files
         uses: actions/checkout@v2
+
+      - name: Composer cache
+        uses: actions/cache@v2
+        with:
+          path: $(composer config cache-files-dir)
+          key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-composer-
 
       - name: Install Dependencies
         run: composer install -q --no-ansi --no-interaction --no-suggest --no-progress --prefer-dist
@@ -41,3 +52,9 @@ jobs:
           node-version: "13.9.0"
 
       - run: yarn install --frozen-lockfile
+
+      - name: Unit Tests
+        run: echo "Run PHP UNIT TESTS"
+
+      - name: Run Feature Tests
+        run: echo "Run FEATURE Tests"
