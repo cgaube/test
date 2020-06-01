@@ -52,28 +52,65 @@ final class ChangelogWorker implements ReleaseWorkerInterface, StageAwareInterfa
         $finder = new Finder();
         $packages = $finder->in('packages')->depth(0)->directories();
 
-        // Create fake package.json file to trick changelog script.
+        // Create version json file to for the changelog script.
         $filesystem = new Filesystem();
-        $fakePackageJson = $filesystem->tempnam(sys_get_temp_dir(), 'package_');
-        dump($fakePackageJson);
-        file_put_contents($fakePackageJson, json_encode(['version' => $version->getVersionString()]));
+        $versionFile = $filesystem->tempnam(sys_get_temp_dir(), 'package_');
+
+        $filesystem->dumpFile($versionFile, json_encode(['version' => $version->getVersionString()]));
+
+        $paths = [
+            './',
+        ];
+        foreach ($packages as $packageFolder) {
+            $paths[] = $packageFolder->getPathname();
+        }
 
         // Update each package changelog.
-        foreach ($packages as $packageFolder) {
-            $packageLog = $packageFolder->getPathname().'/'.$this->changeLogFileName;
-            $this->processRunner->run('yarn standard-changelog -k '.$fakePackageJson.' --infile='.$packageLog.' --same-file --commit-path='.$packageFolder->getPathname());
+        foreach ($paths as $path) {
+            $logFile = $path.'/'.$this->changeLogFileName;
+
+            $fakeOutput = $filesystem->tempnam(sys_get_temp_dir(), 'output_a');
+
+            $this->processRunner->run('yarn standard-changelog --pkg '.$versionFile.' --infile='.$logFile.' --outfile='.$fakeOutput.' --commit-path='.$path);
+
+            $packageChangeLog = $this->cleanLogs(
+                file_get_contents($fakeOutput),
+                $version->getPatch()->getValue() == 0
+            );
+
+            $filesystem->dumpFile($logFile, $packageChangeLog);
+
+            // Make sure we have some changes in this package
+            $filesystem->remove($fakeOutput);
         }
+
+        $filesystem->remove($versionFile);
     }
 
     public function getDescription(Version $version): string
     {
-        $this->work($version);
-
         return sprintf('Update packages changelog files for "%s"', $version->getVersionString());
     }
 
     public function getStage(): string
     {
         return 'changelog';
+    }
+
+    protected function cleanLogs($log, $addNoChangesText = false) {
+
+        $log = trim($log);
+
+        $hasChanges = count(explode(PHP_EOL, $log)) > 1;
+
+        if (!$hasChanges && $addNoChangesText) {
+            $log .= str_repeat(PHP_EOL, 2) .'* No changes';
+        }
+
+        // Remove double lines.
+        $log = preg_replace('/\n{3,}/', PHP_EOL.PHP_EOL, $log);
+
+        $log .= PHP_EOL;
+        return $log;
     }
 }
